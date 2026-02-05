@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard Digital Factory – Unilever</title>
+
+  <style>
+    :root{
+      /* Paleta azul marinho + azul claro (sem roxo) */
+      --navy-900:#07142b;
+      --navy-800:#0a1d3a;
+      --navy-700:#0d2549;
+      --navy-650:#112c58;
+      --blue-500:#1f6fff;
+      --blue-400:#4a90ff;
+      --blue-300:#7bb2ff;
+      --cyan-300:#39d1f0;
+
+      --bg: linear-gradient(180deg, var(--navy-900), var(--navy-800));
+      --panel: linear-gradient(180deg, rgba(17,44,88,.85), rgba(10,29,58,.9));
+      --panel-2: linear-gradient(180deg, rgba(16,37,73,.85), rgba(9,23,48,.9));
+      --text:#eef3ff;
+      --muted:#a9c0e8;
+
+      --accent: var(--blue-400);
+      --accent-strong: var(--blue-500);
+      --accent-weak: var(--blue-300);
+
+      --btn:#143463;         /* tom sólido para parecer botão */
+      --btn-hover:#18437f;
+      --btn-border:#2a5aa1;
+      --danger:#ff6b6b;
+      --border:#1a4a8a;
+
+      --glow: 0 0 16px rgba(74,144,255,0.25), 0 0 32px rgba(31,111,255,0.16);
+
+      /* Tamanho do logo ajustável */
+      --logo-size: 65px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1100px 650px at 8% -15%, rgba(74,144,255,0.18), transparent 60%),
+        radial-gradient(900px 600px at 110% 10%, rgba(57,209,240,0.14), transparent 60%),
+        var(--bg);
+      display:flex; flex-direction:column; gap:14px;
+    }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:10;
+      display:flex; align-items:center; gap:16px; padding:12px 18px;
+      background: linear-gradient(90deg, rgba(10,29,58,0.9), rgba(17,44,88,0.82));
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--border);
+      box-shadow: var(--glow);
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width:0;
+    }
+    .brand img{
+      width: 180px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(74,144,255,0.5));
+    }
+
+    .brand .title{
+      display:flex; flex-direction:column; line-height:1.05;
+    }
+    .brand .title .top{
+      font-weight:800; letter-spacing:.2px; font-size:16px; color:#eaf1ff;
+      text-transform:uppercase;
+    }
+    .brand .title .sub{
+      font-weight:700; color:var(--accent-weak); font-size:13px; letter-spacing:.3px;
+    }
+
+    .spacer{flex:1}
+
+    /* Botões do header */
+    .controls{display:flex; gap:8px; flex-wrap:wrap}
+    button{
+      background:var(--btn); color:var(--text); border:1px solid var(--btn-border);
+      border-radius:10px; padding:9px 12px; cursor:pointer; font-weight:700;
+      transition:all .18s ease; letter-spacing:.2px;
+      box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    button:hover{background:var(--btn-hover); transform:translateY(-1px); box-shadow: var(--glow)}
+    button.accent{background:var(--accent-strong); border-color:transparent; color:white}
+    button.alt{background:var(--cyan-300); border-color:transparent; color:#05222a}
+    button.danger{background:var(--danger); border-color:transparent; color:#2b0000}
+
+    /* Layout principal */
+    main{
+      display:grid; grid-template-columns:300px 1fr; gap:14px; padding:0 18px 18px 18px;
+      min-height:0; flex:1;
+    }
+    aside{
+      background:var(--panel);
+      border:1px solid var(--border); border-radius:14px; padding:12px; overflow:auto; min-height:0;
+      box-shadow: var(--glow);
+    }
+    .list-title{
+      font-weight:800; margin:6px 0 10px 6px; color:var(--muted); text-transform:uppercase;
+      font-size:12px; letter-spacing:.6px;
+    }
+
+    /* Itens que parecem BOTÕES */
+    .dash-item{
+      display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; cursor:pointer; color:var(--text);
+      text-decoration:none; border:1px solid var(--btn-border);
+      background: linear-gradient(180deg, #143463, #0e2a54);  /* sólido azul, sem roxo */
+      transition: all .18s ease;
+      min-height:48px; /* mais “botão” */
+    }
+    .dash-item + .dash-item{margin-top:10px}
+    .dash-item:hover{
+      transform: translateY(-1px);
+      border-color: #3a7af0;
+      box-shadow: 0 8px 20px rgba(31,111,255,0.25), inset 0 0 0 1px rgba(122,178,255,0.15);
+    }
+    .dash-item.active{
+      background: linear-gradient(180deg, #1a4a8a, #143a70);
+      border-color:#5393ff; outline:1px solid #6aa8ff; box-shadow: var(--glow);
+    }
+    .dot{width:10px; height:10px; border-radius:50%; background:#7bb2ff; box-shadow:0 0 10px rgba(74,144,255,.7)}
+    .dash-name{font-weight:800; letter-spacing:.2px}
+    /* removemos a URL para ficar só o nome */
+
+    /* Viewer */
+    section.viewer{
+      background:var(--panel-2);
+      border:1px solid var(--border); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; min-height:0;
+      box-shadow: var(--glow);
+    }
+    .viewer-header{
+      display:flex; align-items:center; gap:10px; padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(90deg, rgba(14,42,84,.92), rgba(16,53,104,.88));
+    }
+    .badge{
+      font-size:12px; color:#032030; background:linear-gradient(90deg,#9cc0ff,#6aa8ff);
+      border-radius:999px; padding:3px 8px; font-weight:900; letter-spacing:.3px;
+      box-shadow: var(--glow);
+    }
+    .viewer-title{font-weight:800}
+    .timer{
+      font-variant-numeric:tabular-nums; color:#cfe1ff; margin-left:8px; font-size:12px; opacity:.95
+    }
+    .viewer-actions{margin-left:auto; display:flex; gap:8px}
+
+    iframe{
+      width:100%; height:100%; border:0;
+      background:radial-gradient(800px 500px at 50% 0%, rgba(74,144,255,0.16), transparent 60%), #07142b;
+      flex:1; min-height:0;
+    }
+
+    footer{
+      padding:10px 18px; color:var(--muted); font-size:12px; border-top:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(7,20,43,.85), rgba(6,14,28,.95));
+    }
+
+    @media (max-width:1000px){
+      main{grid-template-columns:1fr}
+      aside{order:2}
+      section.viewer{order:1}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <!-- Ajuste o caminho do logo; aumente com --logo-size no :root -->
+      <img src="img/Digital.png" alt="Unilever" />
+      <div class="title">
+        <span class="top">Dashboard Digital Factory</span>
+        <span class="sub">Unilever</span>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="controls">
+      <button id="prevBtn" title="Anterior (←)">◀ Anterior</button>
+      <button id="nextBtn" title="Próximo (→)">Próximo ▶</button>
+      <button id="pauseBtn" class="danger" title="Pausar/Retomar (Espaço)">⏸ Pausar</button>
+      <button id="fsBtn" class="alt" title="Tela cheia">⛶ Tela cheia</button>
+      <button id="reloadBtn" title="Recarregar embed atual">⟳ Recarregar</button>
+      <button id="openNew" class="accent" title="Abrir em nova aba">↗ Abrir em nova aba</button>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <div class="list-title">Dashboards</div>
+      <div id="dashList"></div>
+    </aside>
+
+    <section class="viewer">
+      <div class="viewer-header">
+        <span class="badge" id="badgeIndex">1/1</span>
+        <div class="viewer-title" id="currentName">—</div>
+        <div class="timer" id="timerText">auto: 15s</div>
+        <div class="viewer-actions"></div>
+      </div>
+      <iframe id="frame" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </section>
+  </main>
+
+  <footer>
+    Dica: use as setas ← → para navegar, Espaço para pausar/retomar. Passe o mouse sobre o painel para pausar temporariamente.
+  </footer>
+
+  <script>
+    // ============ 1) Dashboards ============
+    const DASHBOARDS = [
+      { name: "Eficiencia Hellmann's", url: "https://app.powerbi.com/reportEmbed?reportId=3f5c85f8-1650-4eb3-b40d-2c7c855ae4ca&autoAuth=true&ctid=f66fae02-5d36-495b-bfe0-78a6ff9f8e6e" },
+      { name: "Eficiencia Knorr", url: "https://app.powerbi.com/reportEmbed?reportId=cd539e2e-c7cf-4614-9801-b9db42f876db&autoAuth=true&ctid=f66fae02-5d36-495b-bfe0-78a6ff9f8e6e" },
+      { name: "Eficiencia Mãe Terra", url: "https://app.powerbi.com/reportEmbed?reportId=a2adb72e-3880-4a22-ba87-aabad4aea1aa&autoAuth=true&ctid=f66fae02-5d36-495b-bfe0-78a6ff9f8e6e" }
+    ];
+
+    // ============ 2) Tempo de rotação ============
+    // Para aumentar, mude para 30, 45, 60, etc.
+    const ROTATE_SECONDS = 60;
+
+    // --- Lógica ---
+    const listEl = document.getElementById('dashList');
+    const frame = document.getElementById('frame');
+    const badge = document.getElementById('badgeIndex');
+    const currentName = document.getElementById('currentName');
+    const timerText = document.getElementById('timerText');
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const fsBtn = document.getElementById('fsBtn');
+    const reloadBtn = document.getElementById('reloadBtn');
+    const openNew = document.getElementById('openNew');
+
+    let idx = 0;
+    let secondsLeft = ROTATE_SECONDS;
+    let paused = false;
+    let hoverPause = false;
+    let intervalId = null;
+
+    function buildList(){
+      listEl.innerHTML = '';
+      DASHBOARDS.forEach((d, i) => {
+        const a = document.createElement('a');
+        a.href = '#'+encodeURIComponent(d.name);
+        a.className = 'dash-item' + (i===idx ? ' active' : '');
+        a.onclick = (ev)=>{ ev.preventDefault(); goTo(i, true); };
+        a.innerHTML = `
+          <span class="dot"></span>
+          <div class="dash-name">${d.name}</div>
+        `;
+        listEl.appendChild(a);
+      });
+    }
+
+    function updateHeader(){
+      badge.textContent = `${idx+1}/${DASHBOARDS.length}`;
+      currentName.textContent = DASHBOARDS[idx]?.name ?? '—';
+      openNew.onclick = () => window.open(DASHBOARDS[idx].url, '_blank', 'noopener,noreferrer');
+      [...document.querySelectorAll('.dash-item')].forEach((el, i) => {
+        el.classList.toggle('active', i===idx);
+      });
+      history.replaceState(null, '', '#'+encodeURIComponent(DASHBOARDS[idx].name));
+    }
+
+    function loadCurrent(){
+      const url = DASHBOARDS[idx]?.url;
+      if(!url) return;
+      frame.src = '';
+      setTimeout(()=>{ frame.src = url; }, 30);
+    }
+
+    function goTo(newIndex, resetTimer=false){
+      if(newIndex < 0) newIndex = DASHBOARDS.length-1;
+      if(newIndex >= DASHBOARDS.length) newIndex = 0;
+      idx = newIndex;
+      loadCurrent();
+      updateHeader();
+      if(resetTimer) secondsLeft = ROTATE_SECONDS;
+    }
+
+    function tick(){
+      if(paused || hoverPause) return;
+      secondsLeft -= 1;
+      if(secondsLeft <= 0){
+        secondsLeft = ROTATE_SECONDS;
+        goTo(idx+1);
+      }
+      timerText.textContent = `auto: ${String(secondsLeft).padStart(2,'0')}s`;
+    }
+
+    function startTimer(){
+      stopTimer();
+      secondsLeft = ROTATE_SECONDS;
+      intervalId = setInterval(tick, 1000);
+    }
+
+    function stopTimer(){
+      if(intervalId) clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    // Controles
+    prevBtn.addEventListener('click', ()=>{ goTo(idx-1, true); });
+    nextBtn.addEventListener('click', ()=>{ goTo(idx+1, true); });
+    reloadBtn.addEventListener('click', ()=>{ loadCurrent(); secondsLeft = ROTATE_SECONDS; });
+
+    pauseBtn.addEventListener('click', ()=>{
+      paused = !paused;
+      pauseBtn.textContent = paused ? '▶ Retomar' : '⏸ Pausar';
+      pauseBtn.classList.toggle('danger', !paused);
+      secondsLeft = ROTATE_SECONDS;
+      timerText.textContent = paused ? 'auto: pausado' : `auto: ${ROTATE_SECONDS}s`;
+    });
+
+    // Pausa temporária ao passar o mouse no viewer
+    const viewer = document.querySelector('.viewer');
+    viewer.addEventListener('mouseenter', ()=>{ hoverPause = true; timerText.textContent = 'auto: pausado (hover)'; });
+    viewer.addEventListener('mouseleave', ()=>{ hoverPause = false; secondsLeft = ROTATE_SECONDS; });
+
+    // Atalhos de teclado
+    document.addEventListener('keydown', (e)=>{
+      if(e.code === 'ArrowLeft'){ goTo(idx-1, true); }
+      if(e.code === 'ArrowRight'){ goTo(idx+1, true); }
+      if(e.code === 'Space'){ e.preventDefault(); pauseBtn.click(); }
+      if(e.code === 'KeyR'){ reloadBtn.click(); }
+      if(e.code === 'KeyF'){ fsBtn.click(); }
+    });
+
+    // Tela cheia
+    fsBtn.addEventListener('click', ()=>{
+      const el = document.documentElement;
+      if(!document.fullscreenElement){ el.requestFullscreen?.(); }
+      else{ document.exitFullscreen?.(); }
+    });
+
+    // Deep-link por hash (#Nome do dashboard)
+    function resolveFromHash(){
+      const hash = decodeURIComponent(location.hash.replace('#','')).trim();
+      if(!hash) return;
+      const i = DASHBOARDS.findIndex(d => d.name.toLowerCase() === hash.toLowerCase());
+      if(i >= 0) idx = i;
+    }
+
+    // Inicialização
+    (function init(){
+      if(!Array.isArray(DASHBOARDS) || DASHBOARDS.length === 0){
+        document.body.innerHTML = '<p style="padding:24px;color:#e7eaf0">Configure a constante <b>DASHBOARDS</b> com seus links.</p>';
+        return;
+      }
+      resolveFromHash();
+      buildList();
+      goTo(idx);
+      startTimer();
+    })();
+  </script>
+</body>
+</html>
